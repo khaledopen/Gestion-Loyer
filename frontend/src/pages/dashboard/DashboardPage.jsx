@@ -57,7 +57,7 @@ const DashboardPage = () => {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
         <StatCard icon={<Building2 size={24} />} label="Immeubles" value={stats?.immeubles || 0} color="primary" />
         <StatCard icon={<Home size={24} />} label="Appartements" value={stats?.appartements || 0} color="primary" subtitle={`${stats?.appartements_occupes || 0} occupés`} />
         <StatCard icon={<Users size={24} />} label="Locataires" value={stats?.locataires || 0} color="success" subtitle="Actifs" />

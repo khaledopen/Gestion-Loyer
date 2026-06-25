@@ -14,15 +14,15 @@ const StatCard = ({ icon, label, value, color = 'primary', subtitle }) => {
   };
 
   return (
-    <div className="bg-surface rounded-xl border border-border-light card-shadow p-6 transition-transform hover:-translate-y-1 duration-200">
-      <div className="flex items-center gap-4">
+    <div className="bg-surface rounded-xl border border-border-light card-shadow p-4 sm:p-6 transition-transform hover:-translate-y-1 duration-200">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
         <div className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0 ${colorStyles[color]}`}>
           {icon}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-text-muted truncate">{label}</p>
-          <p className="text-xl sm:text-2xl font-semibold text-text-main mt-1 truncate" title={value}>{value}</p>
-          {subtitle && <p className="text-xs text-text-muted mt-1 truncate">{subtitle}</p>}
+          <p className="text-xs sm:text-sm font-medium text-text-muted truncate">{label}</p>
+          <p className="text-lg sm:text-2xl font-semibold text-text-main mt-0.5 sm:mt-1 truncate" title={value}>{value}</p>
+          {subtitle && <p className="text-[10px] sm:text-xs text-text-muted mt-0.5 sm:mt-1 truncate">{subtitle}</p>}
         </div>
       </div>
     </div>
