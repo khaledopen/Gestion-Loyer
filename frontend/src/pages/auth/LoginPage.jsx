@@ -126,15 +126,6 @@ const LoginPage = () => {
             </button>
           </div>
 
-          {isLogin && (
-            <div className="mt-6 p-4 rounded-lg bg-background border border-border-light">
-              <p className="text-xs text-text-muted text-center flex flex-col gap-1">
-                <span><strong>Demo Account</strong></span>
-                <span>Email: <span className="text-text-main font-medium">admin@gestionloyer.com</span></span>
-                <span>Pass: <span className="text-text-main font-medium">admin123</span></span>
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </div>
