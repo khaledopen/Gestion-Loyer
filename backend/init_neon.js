@@ -1,17 +1,14 @@
-require('dotenv').config();
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 
+const connectionString = 'postgresql://neondb_owner:npg_SfGo2alvLRj3@ep-solitary-sound-atxvv9ws.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require';
+
 const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  connectionString,
+  ssl: { rejectUnauthorized: false }
 });
 
 const schema = `
--- Table des utilisateurs
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   nom VARCHAR(100) NOT NULL,
@@ -21,7 +18,6 @@ CREATE TABLE IF NOT EXISTS users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table des immeubles
 CREATE TABLE IF NOT EXISTS immeubles (
   id SERIAL PRIMARY KEY,
   nom VARCHAR(150) NOT NULL,
@@ -33,7 +29,6 @@ CREATE TABLE IF NOT EXISTS immeubles (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table des appartements
 CREATE TABLE IF NOT EXISTS appartements (
   id SERIAL PRIMARY KEY,
   numero VARCHAR(20) NOT NULL,
@@ -46,7 +41,6 @@ CREATE TABLE IF NOT EXISTS appartements (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table des locataires
 CREATE TABLE IF NOT EXISTS locataires (
   id SERIAL PRIMARY KEY,
   nom VARCHAR(100) NOT NULL,
@@ -61,7 +55,6 @@ CREATE TABLE IF NOT EXISTS locataires (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table des paiements
 CREATE TABLE IF NOT EXISTS paiements (
   id SERIAL PRIMARY KEY,
   locataire_id INTEGER REFERENCES locataires(id) ON DELETE CASCADE,
@@ -76,7 +69,6 @@ CREATE TABLE IF NOT EXISTS paiements (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table des réparations
 CREATE TABLE IF NOT EXISTS reparations (
   id SERIAL PRIMARY KEY,
   description TEXT NOT NULL,
@@ -90,7 +82,6 @@ CREATE TABLE IF NOT EXISTS reparations (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Index pour performances
 CREATE INDEX IF NOT EXISTS idx_appartements_immeuble ON appartements(immeuble_id);
 CREATE INDEX IF NOT EXISTS idx_locataires_appartement ON locataires(appartement_id);
 CREATE INDEX IF NOT EXISTS idx_paiements_locataire ON paiements(locataire_id);
@@ -99,31 +90,21 @@ CREATE INDEX IF NOT EXISTS idx_reparations_appartement ON reparations(appartemen
 CREATE INDEX IF NOT EXISTS idx_reparations_immeuble ON reparations(immeuble_id);
 `;
 
-async function initDb() {
+async function initNeon() {
   try {
-    console.log('🔄 Initialisation de la base de données...');
+    console.log('🔄 Initialisation de la base Neon...');
     await pool.query(schema);
     console.log('✅ Tables créées avec succès.');
-
-    // Créer un utilisateur admin par défaut
-    const existingAdmin = await pool.query('SELECT id FROM users WHERE email = $1', ['admin@gestionloyer.com']);
-    if (existingAdmin.rows.length === 0) {
-      const hashedPassword = await bcrypt.hash('admin123', 10);
-      await pool.query(
-        'INSERT INTO users (nom, email, password_hash, role) VALUES ($1, $2, $3, $4)',
-        ['Administrateur', 'admin@gestionloyer.com', hashedPassword, 'admin']
-      );
-      console.log('✅ Utilisateur admin créé: admin@gestionloyer.com / admin123');
-    } else {
-      console.log('ℹ️  Utilisateur admin existe déjà.');
-    }
-
-    console.log('🎉 Base de données initialisée avec succès!');
-  } catch (error) {
-    console.error('❌ Erreur lors de l\'initialisation:', error.message);
+    const hashedPassword = await bcrypt.hash('admin123', 10);
+    await pool.query(
+      'INSERT INTO users (nom, email, password_hash, role) VALUES ($1, $2, $3, $4) ON CONFLICT (email) DO NOTHING',
+      ['Administrateur', 'admin@gestionloyer.com', hashedPassword, 'admin']
+    );
+    console.log('✅ Utilisateur admin créé.');
+  } catch(e) {
+    console.error('Erreur:', e);
   } finally {
     await pool.end();
   }
 }
-
-initDb();
+initNeon();
