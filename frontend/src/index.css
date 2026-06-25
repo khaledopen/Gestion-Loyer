@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1E3A8A; /* Bleu marine */
+  --color-primary-hover: #1e337a;
+  --color-secondary: #3B82F6; /* Bleu clair */
+  --color-secondary-hover: #2563eb;
+  
+  --color-success: #10B981; /* Vert */
+  --color-success-light: #ecfdf5;
+  --color-warning: #F59E0B; /* Orange */
+  --color-warning-light: #fffbeb;
+  --color-danger: #EF4444; /* Rouge */
+  --color-danger-light: #fef2f2;
+  
+  --color-background: #F8FAFC; /* Fond principal */
+  --color-surface: #FFFFFF; /* Cartes */
+  
+  --color-text-main: #1F2937; /* Texte principal */
+  --color-text-muted: #6B7280; /* Texte secondaire */
+  
+  --color-border-light: #E5E7EB; /* Bordures */
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text-main);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Base UI rules */
+@layer utilities {
+  .card-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
